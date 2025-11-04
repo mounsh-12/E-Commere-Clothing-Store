@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clothing Store | Simple E-Commerce Project</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>🛍️ Simple E-Commerce Clothing Store</h1>
+</header>
+
+<!-- Login Page -->
+<div id="loginPage" class="container">
+  <h2>Login</h2>
+  <input type="text" id="loginEmail" placeholder="Email" required>
+  <input type="password" id="loginPassword" placeholder="Password" required>
+  <button onclick="login()">Login</button>
+  <div class="link">
+    <p>Don't have an account? <a href="#" onclick="showSignup()">Sign Up</a></p>
+  </div>
+</div>
+
+<!-- Signup Page -->
+<div id="signupPage" class="container" style="display:none;">
+  <h2>Sign Up</h2>
+  <input type="text" id="signupName" placeholder="Full Name" required>
+  <input type="email" id="signupEmail" placeholder="Email" required>
+  <input type="password" id="signupPassword" placeholder="Password" required>
+  <button onclick="signup()">Create Account</button>
+  <div class="link">
+    <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+  </div>
+</div>
+
+<!-- Store Page -->
+<div id="storePage" style="display:none;">
+  <h2 style="text-align:center; margin-top:20px;">Welcome to Our Clothing Store 👕</h2>
+  <div class="products" id="productList"></div>
+
+  <div id="cart">
+    <h3>🛒 Shopping Cart</h3>
+    <ul id="cartItems"></ul>
+    <h4>Total: ₹<span id="total">0</span></h4>
+
+    <div class="payment">
+      <h4>Checkout</h4>
+      <input type="text" id="custName" placeholder="Full Name">
+      <input type="text" id="custAddress" placeholder="Delivery Address">
+      <select id="paymentMethod">
+        <option value="">Select Payment Method</option>
+        <option value="gpay">Google Pay</option>
+        <option value="paytm">Paytm</option>
+        <option value="phonepe">PhonePe</option>
+        <option value="cod">Cash on Delivery</option>
+      </select>
+      <button onclick="proceedToPayment()">Proceed to Payment</button>
+    </div>
+
+    <button style="background-color:#dc3545;" onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
