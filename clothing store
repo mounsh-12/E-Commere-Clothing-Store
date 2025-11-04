@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clothing Store | Simple E-Commerce Project</title>
+<style>
+  body {
+    font-family: "Times New Roman", serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+  }
+  header {
+    background-color: #222;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+  }
+  .container {
+    max-width: 400px;
+    margin: 50px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  input, select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
+  .link {
+    text-align: center;
+    margin-top: 10px;
+  }
+  .products {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+  }
+  .product {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 10px;
+    width: 220px;
+    text-align: center;
+    padding: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  .product img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+  #cart {
+    background: white;
+    margin: 20px auto;
+    width: 90%;
+    max-width: 600px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  #cart ul {
+    list-style: none;
+    padding: 0;
+  }
+  .payment {
+    margin-top: 15px;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🛍️ Simple E-Commerce Clothing Store</h1>
+</header>
+
+<!-- Login Page -->
+<div id="loginPage" class="container">
+  <h2>Login</h2>
+  <input type="text" id="loginEmail" placeholder="Email" required>
+  <input type="password" id="loginPassword" placeholder="Password" required>
+  <button onclick="login()">Login</button>
+  <div class="link">
+    <p>Don't have an account? <a href="#" onclick="showSignup()">Sign Up</a></p>
+  </div>
+</div>
+
+<!-- Signup Page -->
+<div id="signupPage" class="container" style="display:none;">
+  <h2>Sign Up</h2>
+  <input type="text" id="signupName" placeholder="Full Name" required>
+  <input type="email" id="signupEmail" placeholder="Email" required>
+  <input type="password" id="signupPassword" placeholder="Password" required>
+  <button onclick="signup()">Create Account</button>
+  <div class="link">
+    <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+  </div>
+</div>
+
+<!-- Store Page -->
+<div id="storePage" style="display:none;">
+  <h2 style="text-align:center; margin-top:20px;">Welcome to Our Clothing Store 👕</h2>
+  <div class="products" id="productList"></div>
+  <div id="cart">
+    <h3>🛒 Shopping Cart</h3>
+    <ul id="cartItems"></ul>
+    <h4>Total: ₹<span id="total">0</span></h4>
+
+    <div class="payment">
+      <h4>Checkout</h4>
+      <input type="text" id="custName" placeholder="Full Name">
+      <input type="text" id="custAddress" placeholder="Delivery Address">
+      <select id="paymentMethod">
+        <option value="">Select Payment Method</option>
+        <option value="gpay">Google Pay</option>
+        <option value="paytm">Paytm</option>
+        <option value="phonepe">PhonePe</option>
+        <option value="cod">Cash on Delivery</option>
+      </select>
+      <button onclick="proceedToPayment()">Proceed to Payment</button>
+    </div>
+
+    <button style="background-color:#dc3545;" onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<script>
+  const products = [
+    { id: 1, name: "Men's White Shirt", price: 799, image: "https://assets.ajio.com/medias/sys_master/root/20230619/mxHu/64900b37d55b7d0c63b512b8/-473Wx593H-466051992-white-MODEL.jpg" },
+    { id: 2, name: "Women's Floral Dress", price: 1199, image: "https://assets.ajio.com/medias/sys_master/root/20230616/HX2I/648b1b38a9b42d15c9d7c9ff/-473Wx593H-466000555-yellow-MODEL.jpg" },
+    { id: 3, name: "Blue Denim Jeans", price: 1499, image: "https://assets.ajio.com/medias/sys_master/root/20230825/G36T/64e8b3d5ddf7791519b3e91c/-473Wx593H-441153532-blue-MODEL.jpg" },
+    { id: 4, name: "Black Hoodie", price: 999, image: "https://assets.ajio.com/medias/sys_master/root/20221123/bdA6/637dfd1eaeb269659c5b8c8e/-473Wx593H-441151066-black-MODEL.jpg" },
+    { id: 5, name: "Cotton T-Shirt", price: 499, image: "https://assets.ajio.com/medias/sys_master/root/20230712/VYlm/64ae7b73a9b42d15c97e9864/-473Wx593H-466120801-white-MODEL.jpg" }
+  ];
+
+  const productList = document.getElementById('productList');
+  const cartItems = document.getElementById('cartItems');
+  const totalSpan = document.getElementById('total');
+  let total = 0;
+
+  // Display products
+  function showProducts() {
+    productList.innerHTML = "";
+    products.forEach(product => {
+      const div = document.createElement('div');
+      div.classList.add('product');
+      div.innerHTML = `
+        <img src="${product.image}" alt="${product.name}">
+        <h3>${product.name}</h3>
+        <p>Price: ₹${product.price}</p>
+        <button onclick="addToCart(${product.id})">Add to Cart</button>
+      `;
+      productList.appendChild(div);
+    });
+  }
+
+  // Add to Cart
+  function addToCart(id) {
+    const item = products.find(p => p.id === id);
+    const li = document.createElement('li');
+    li.textContent = `${item.name} - ₹${item.price}`;
+    cartItems.appendChild(li);
+    total += item.price;
+    totalSpan.textContent = total;
+  }
+
+  // Simulate Payment Gateway
+  function proceedToPayment() {
+    const name = document.getElementById('custName').value;
+    const address = document.getElementById('custAddress').value;
+    const method = document.getElementById('paymentMethod').value;
+
+    if (!name || !address || !method) {
+      alert("Please fill in all payment details!");
+      return;
+    }
+
+    if (method === "gpay") {
+      window.open("https://pay.google.com/", "_blank");
+    } else if (method === "paytm") {
+      window.open("https://paytm.com/", "_blank");
+    } else if (method === "phonepe") {
+      window.open("https://www.phonepe.com/", "_blank");
+    } else {
+      alert("Order placed successfully! Pay with cash on delivery.");
+    }
+
+    alert("✅ Payment Processed Successfully!\nThank you for shopping with us!");
+    cartItems.innerHTML = "";
+    total = 0;
+    totalSpan.textContent = total;
+  }
+
+  // Signup Function
+  function signup() {
+    const name = document.getElementById('signupName').value;
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
+    if (!name || !email || !password) {
+      alert("Please fill all fields!");
+      return;
+    }
+    localStorage.setItem("user", JSON.stringify({ name, email, password }));
+    alert("Account created successfully!");
+    showLogin();
+  }
+
+  // Login Function
+  function login() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user && user.email === email && user.password === password) {
+      alert("Login successful!");
+      showStore();
+    } else {
+      alert("Invalid email or password!");
+    }
+  }
+
+  // Logout
+  function logout() {
+    alert("Logged out successfully!");
+    showLogin();
+  }
+
+  // Page Navigation
+  function showSignup() {
+    document.getElementById('loginPage').style.display = "none";
+    document.getElementById('signupPage').style.display = "block";
+    document.getElementById('storePage').style.display = "none";
+  }
+
+  function showLogin() {
+    document.getElementById('loginPage').style.display = "block";
+    document.getElementById('signupPage').style.display = "none";
+    document.getElementById('storePage').style.display = "none";
+  }
+
+  function showStore() {
+    document.getElementById('loginPage').style.display = "none";
+    document.getElementById('signupPage').style.display = "none";
+    document.getElementById('storePage').style.display = "block";
+    showProducts();
+  }
+</script>
+
+</body>
+</html>
